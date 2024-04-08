@@ -5,13 +5,13 @@ from litex.build.lattice.programmer import EcpprogProgrammer
 
 # Platform definition
 _io = [
-    ("clk", 0, Pins("P2"), IOStandard("LVCMOS33")),
-    ("user_led", 0, Pins("P6"), IOStandard("LVCMOS33")),
+    ("clk25", 0, Pins("P3"), IOStandard("LVCMOS33")),
+    ("user_led", 0, Pins("U16"), IOStandard("LVCMOS33")),
 ]
 
 class Platform(LatticeECP5Platform):
-    default_clk_name = "clk"
-    default_clk_period = 10.0
+    default_clk_name = "clk25"
+    default_clk_period = 25.0
 
     def __init__(self, board="i5", revision="7.0", toolchain="trellis"):
         self.revision = revision
@@ -26,7 +26,7 @@ class Platform(LatticeECP5Platform):
 # Blinky design
 class Blinky(Module):
     def __init__(self, platform):
-        self.clk = platform.request("clk")
+        self.clk = platform.request("clk25")
         self.led = platform.request("user_led")
 
         platform.add_period_constraint(self.clk, 1e9 / 25e6)
