@@ -36,7 +36,7 @@ class Blinky(Module):
         self.comb += self.cd_sys.clk.eq(self.clk)
 
         self.sync += self.counter.eq(self.counter + 1)
-        self.comb += self.led.eq(self.counter[16])
+        self.comb += self.led.eq(self.counter[20])
 
 # Build and program
 if __name__ == "__main__":
