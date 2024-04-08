@@ -35,9 +35,9 @@ class Blinky(Module):
         # self.clock_domains.cd_sys = ClockDomain()
         # self.comb += self.cd_sys.clk.eq(self.clk)
 
-        self.comb += self.led.eq(self.counter[25])
+        self.comb += led.eq(self.counter[25])
 
-        self.sync += self.counter.eq(self.counter + 1)
+        self.sync += counter.eq(self.counter + 1)
 
 # Build and program
 if __name__ == "__main__":
