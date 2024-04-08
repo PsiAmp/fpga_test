@@ -28,13 +28,15 @@ class Blinky(Module):
     def __init__(self, platform):
         self.clk = platform.request("clk25")
         self.led = platform.request("user_led")
+        self.counter = Signal(32)
 
         platform.add_period_constraint(self.clk, 1e9 / 25e6)
 
         self.clock_domains.cd_sys = ClockDomain()
         self.comb += self.cd_sys.clk.eq(self.clk)
 
-        self.sync += self.led.eq(~self.led)
+        self.sync += self.counter.eq(self.counter + 1)
+        self.comb += self.lef.eq(self.counter[16])
 
 # Build and program
 if __name__ == "__main__":
