@@ -32,11 +32,15 @@ class Blinky(Module):
 
         platform.add_period_constraint(self.clk, 1e9 / 25e6)
 
+        # self.clock_domains.cd_led = ClockDomain()
+        # self.comb += self.cd_led.clk.eq(self.clk)
+        # self.clock_domains.cd_led.rst = ~ResetSignal("cd_sys")
+
         self.clock_domains.cd_sys = ClockDomain()
         self.comb += self.cd_sys.clk.eq(self.clk)
 
         self.sync += self.counter.eq(self.counter + 1)
-        self.comb += self.led.eq(self.counter[20])
+        self.comb += self.led.eq(self.counter[25])
 
 # Build and program
 if __name__ == "__main__":
