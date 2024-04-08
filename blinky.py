@@ -10,13 +10,15 @@ _io = [
 ]
 
 class Platform(LatticeECP5Platform):
-    default_clk_name = "clk25"
-    default_clk_period = 25.0
+    default_clk_name   = "clk25"
+    default_clk_period = 1e9/25e6
 
     def __init__(self, board="i5", revision="7.0", toolchain="trellis"):
         self.revision = revision
+
         device     = {"7.0": "LFE5U-25F-6BG381C"}[revision]
         io         = {"7.0": _io}[revision]
+
         LatticeECP5Platform.__init__(self, device, io, toolchain=toolchain)
 
     def create_programmer(self):
@@ -25,26 +27,22 @@ class Platform(LatticeECP5Platform):
 
 # Blinky design
 class Blinky(Module):
-    def __init__(self, platform):
-        self.clk = platform.request("clk25")
-        self.led = platform.request("user_led")
-        self.counter = Signal(32)
+    def __init__(self, led):
+        # self.clk = platform.request("clk25")
+        counter = Signal(26)
 
-        platform.add_period_constraint(self.clk, 1e9 / 25e6)
+        # platform.add_period_constraint(self.clk, 1e9 / 25e6)
+        # self.clock_domains.cd_sys = ClockDomain()
+        # self.comb += self.cd_sys.clk.eq(self.clk)
 
-        # self.clock_domains.cd_led = ClockDomain()
-        # self.comb += self.cd_led.clk.eq(self.clk)
-        # self.clock_domains.cd_led.rst = ~ResetSignal("cd_sys")
-
-        self.clock_domains.cd_sys = ClockDomain()
-        self.comb += self.cd_sys.clk.eq(self.clk)
+        self.comb += self.led.eq(self.counter[25])
 
         self.sync += self.counter.eq(self.counter + 1)
-        self.sync += self.led.eq(self.counter[28])
 
 # Build and program
 if __name__ == "__main__":
     platform = Platform()
-    blinky = Blinky(platform)
+    led = platform.request("user_led")
+    blinky = Blinky(led)
     platform.build(blinky)
     # platform.create_programmer().load_bitstream("build/top.bin")
