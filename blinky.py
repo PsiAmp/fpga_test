@@ -36,7 +36,7 @@ class Blinky(Module):
         # self.comb += led.eq(counter[24])
         self.sync += [
             counter.eq(counter + 1),
-            If(counter == 25e6, led.eq(~led), counter.eq(0))
+            If(counter == int(25e6), led.eq(~led), counter.eq(0))
         ]
 
 # Build and program
