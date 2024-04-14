@@ -100,3 +100,4 @@ if __name__ == "__main__":
 
     if args.load:
         platform.create_programmer().load_bitstream("build/gateware/blinky2.bit")
+
