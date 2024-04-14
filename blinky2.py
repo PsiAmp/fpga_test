@@ -2,7 +2,7 @@ import argparse
 
 from litex.build.generic_platform import *
 from litex.build.lattice import LatticeECP5Platform
-from litex.build.lattice.programmer import EcpprogProgrammer
+from litex.build.lattice.programmer import EcpDapProgrammer
 from litex.soc.cores.clock import ECP5PLL
 from litex.soc.cores.led import LedChaser
 from litex.soc.integration.builder import Builder
@@ -41,7 +41,7 @@ class Platform(LatticeECP5Platform):
         LatticeECP5Platform.__init__(self, device, io, toolchain=toolchain)
 
     def create_programmer(self):
-        return EcpprogProgrammer()
+        return EcpDapProgrammer()
 
 
 class BlinkySoC(SoCMini):
@@ -57,17 +57,17 @@ class BlinkySoC(SoCMini):
 
         self.submodules.led = Blinky(platform.request('user_led'), Signal(32), sys_clk_freq=sys_clk_freq)
 
-        self.add_csr('leds')
+        # self.add_csr('leds')
 
 
 # Blinky design
 class Blinky(Module):
-    def __init__(self, led, counter, sys_clk_freq):
 
+    def __init__(self, led, counter, sys_clk_freq):
         self.submodules.leds = LedChaser(
             sys_clk_freq=sys_clk_freq,
             pads=led,
-            period=5.0
+            period=0.25
         )
 
         # self.led = led
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
     if args.build:
         builder = Builder(blinky_soc, output_dir="build", csr_csv="scripts/csr.csv")
-        builder.build(build_name="mic_hub", run=args.build)
+        builder.build(build_name="blinky2", run=args.build)
 
     if args.load:
-        platform.create_programmer().load_bitstream("build/top.bit")
+        platform.create_programmer().load_bitstream("build/gateware/blinky2.bit")
